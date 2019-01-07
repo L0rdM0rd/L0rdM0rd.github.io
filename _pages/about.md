@@ -3,7 +3,7 @@ title: "About"
 permalink: /about/
 header:
   image: "images/uga-stadium.jpg"
-  {: height=300 width=200}
+  {: height="300" width="200"}
 ---
 
 Hello World! I'm a computer science student at UGA pursuing a certification in

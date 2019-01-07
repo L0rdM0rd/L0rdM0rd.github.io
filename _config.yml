@@ -16,7 +16,7 @@ minimal_mistakes_skin    : "dark" # "air", "aqua", "contrast", "default", "dirt"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Justin Hooker"
+title                    : "Home"
 title_separator          : "-"
 name                     : "Justin Hooker"
 description              : "My Projects Portfolio"
@@ -266,7 +266,7 @@ defaults:
       comments: # true
       share: true
       related: true
-      
+
   # _pages
   - scope:
       path: ""

@@ -69,9 +69,7 @@ $$\begin{equation}
 The result of the partial derivative for $$\beta_{1}$$ is still in terms of $$\beta_{0}$$, so we need to do a bit more work. We can use the partial for $$\beta_{0}$$ as a function of $$\beta_{1}$$ to substitute and solve for $$\beta_{1}$$ using some algebra. The end result is a little messy but is a direct solution nonetheless!
 
 $$\begin{equation}
-\beta_{1} = [\sum_{i=1}^{n}x_{i}y_{i}-(1/n)\sum_{i=1}^{n}x_{i}\sum_{i=1}^{n}y_{i}] \\
-% \\
-[\sum_{i=1}^{n}(x_{i})^{2} - (1/n)(\sum_{i=1}^{n}x_{i})^{2}]
+\beta_{1} = \frac{\sum_{i=1}^{n}x_{i}y_{i}-(1/n)\sum_{i=1}^{n}x_{i}\sum_{i=1}^{n}y_{i}}{\sum_{i=1}^{n}(x_{i})^{2} - (1/n)(\sum_{i=1}^{n}x_{i})^{2}}
 \end{equation}$$
 $$\begin{equation}
 \beta_{1}=cov(x,y)/var(x)

@@ -48,42 +48,29 @@ SE = \sum_{i=1}^{n}(y_{i}-\beta_{0}-\beta_{1}x_{i})^{2}
 First, we'll take the partial derivative of SE for $$\beta_{0}$$.
 
 $$\begin{equation}
-\beta_{0}^{'} = -2\sum_{i=1}^{n}(y_{i}-\beta_{0}-\beta_{1}x_{i}) = 0
-\end{equation}$$
-$$\begin{equation}
-\sum_{i=1}^{n}(y_{i}-\beta_{0}-\beta_{1}x_{i}) = 0
-\end{equation}$$
-$$\begin{equation}
-\sum_{i=1}^{n}\beta_{0} = \sum_{i=1}^{n}y_{i} -\beta_{1}\sum_{i=1}^{n}x_{i}
-\end{equation}$$
-$$\begin{equation}
-n\beta_{0} = \sum_{i=1}^{n}y_{i} - \beta_{1}\sum_{i=1}^{n}x_{i}
-\end{equation}$$
-$$\begin{equation}
-\beta_{0} = (1/n)\sum_{i=1}^{n}y_{i} - \beta_{1}(1/n)\sum_{i=1}^{n}x_{i}
-\end{equation}$$
-$$\begin{equation}
+\beta_{0}^{'} = -2\sum_{i=1}^{n}(y_{i}-\beta_{0}-\beta_{1}x_{i}) = 0 \\
+= \sum_{i=1}^{n}(y_{i}-\beta_{0}-\beta_{1}x_{i}) = 0 \\
+\sum_{i=1}^{n}\beta_{0} = \sum_{i=1}^{n}y_{i} -\beta_{1}\sum_{i=1}^{n}x_{i} \\
+n\beta_{0} = \sum_{i=1}^{n}y_{i} - \beta_{1}\sum_{i=1}^{n}x_{i} \\
+\beta_{0} = (1/n)\sum_{i=1}^{n}y_{i} - \beta_{1}(1/n)\sum_{i=1}^{n}x_{i} \\
 \beta_{0} = y^{-} - \beta_{1}x^{-}
 \end{equation}$$
 
 After dropping the -2 constant, we distribute the summation operator and rewrite in terms of $$\beta_{0}$$. $$\beta_{0}$$ is the model intercept, so a summation over constant also produces a constant ($$n\beta_{0}$$).
 
-We can now use this result with the partial derivative of SE for $$\beta_{1} for the direct solution.
+We can now use this result with the partial derivative of SE for $$\beta_{1}$$ for the direct solution.
 
 $$\begin{equation}
-\beta_{1}^{'} = -2\sum_{i=1}^{n}(y_{i}-\beta_{0}-\beta_{1}x_{i})(x_{i}) = 0
-$$\end{equation}$$
-$$\begin{equation}
-= \sum_{i=1}^{n}x_{i}(y_{i}-\beta_{0}-\beta_{1}x_{i}) = 0
-$$\end{equation}$$
-$$\begin{equation}
+\beta_{1}^{'} = -2\sum_{i=1}^{n}(y_{i}-\beta_{0}-\beta_{1}x_{i})(x_{i}) = 0 \\
+= \sum_{i=1}^{n}x_{i}(y_{i}-\beta_{0}-\beta_{1}x_{i}) = 0 \\
 =\sum_{i=1}^{n}x_{i}y_{i}-\beta_{0}\sum_{i=1}^{n}x_{i}-\beta_{1}\sum_{i=1}^{n}(x_{i})^{2} = 0
-$$\end{equation}$$
+\end{equation}$$
 
 The result of the partial derivative for $$\beta_{1}$$ is still in terms of $$\beta_{0}$$, so we need to do a bit more work. We can use the partial for $$\beta_{0}$$ as a function of $$\beta_{1}$$ to substitute and solve for $$\beta_{1}$$ using some algebra. The end result is a little messy but is a direct solution nonetheless!
 
 $$\begin{equation}
-\beta_{1} = [\sum_{i=1}^{n}x_{i}y_{i}-(1/n)\sum_{i=1}^{n}x_{i}\sum_{i=1}^{n}y_{i}]\
+\beta_{1} = [\sum_{i=1}^{n}x_{i}y_{i}-(1/n)\sum_{i=1}^{n}x_{i}\sum_{i=1}^{n}y_{i}] \\
+% \\
 [\sum_{i=1}^{n}(x_{i})^{2} - (1/n)(\sum_{i=1}^{n}x_{i})^{2}]
 \end{equation}$$
 $$\begin{equation}
@@ -93,5 +80,5 @@ $$\begin{equation}
 And here is the normal equation for multiple features:
 
 $$\begin{equation}
-\theta^{^} = (X^{T}\dot{X})^{-1}\dot{X^{T}}\dot{y}
+\theta = (X^{T} \cdot{X})^{-1} \cdot{X^{T}} \cdot{y}
 \end{equation}$$

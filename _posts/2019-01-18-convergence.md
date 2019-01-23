@@ -37,9 +37,9 @@ For each instance, we take the squared difference between our prediction and the
 
 ### The Closed Form Solution
 
-In this section, I will go through the steps to find model parameters for a single feature. The result for multiple features is known as the normal equation, or the closed form solution. The proof is conceptually the same but uses matrix notation for convenience. In either case, application is a direct solution of optimal parameters instead of an iterated approach (more on this later). Lets get started!
+In this section, I will go through the steps to find model parameters for a single feature. Application of multiple features is conceptually the same process but is done using matrix notation for convenience. Either case provides a direct solution of optimal parameters instead of an iterated approach (more on this later). Lets get started!
 
-Our goal is to minimize our performance measure (RMSE) with respect to the model parameters ($$\beta_{0}$$ and $$\beta_{1}$$). We can drop the square root and the (1/m) constant since they have no effect on the end result. This simplifies our function to the sum of model errors (SE):
+Our goal is to minimize our performance measure (RMSE) with respect to the model parameters ($$\beta_{0}$$ and $$\beta_{1}$$). We can drop the square root and the (1/m) constant since they have no effect on the end result. This simplifies our function to the squared-sum of model errors (SE):
 
 $$\begin{equation}
 SE = \sum_{i=1}^{n}(y_{i}-\beta_{0}-\beta_{1}x_{i})^{2}
@@ -53,12 +53,12 @@ $$\begin{equation}
 \sum_{i=1}^{n}\beta_{0} = \sum_{i=1}^{n}y_{i} -\beta_{1}\sum_{i=1}^{n}x_{i} \\
 n\beta_{0} = \sum_{i=1}^{n}y_{i} - \beta_{1}\sum_{i=1}^{n}x_{i} \\
 \beta_{0} = (1/n)\sum_{i=1}^{n}y_{i} - \beta_{1}(1/n)\sum_{i=1}^{n}x_{i} \\
-\beta_{0} = y^{-} - \beta_{1}x^{-}
+\beta_{0} = \bar{y} - \beta_{1}\bar{X}
 \end{equation}$$
 
-After dropping the -2 constant, we distribute the summation operator and rewrite in terms of $$\beta_{0}$$. $$\beta_{0}$$ is the model intercept, so a summation over constant also produces a constant ($$n\beta_{0}$$).
+After dropping the -2 constant, we distribute the summation operator and rewrite in terms of $$\beta_{0}$$. $$\beta_{0}$$ is the model intercept, so a summation over a constant also produces a constant ($$n\beta_{0}$$).
 
-We can now use this result with the partial derivative of SE for $$\beta_{1}$$ for the direct solution.
+We can now use this result with the partial derivative of SE for $$\beta_{1}$$ to derive the direct solution.
 
 $$\begin{equation}
 \beta_{1}^{'} = -2\sum_{i=1}^{n}(y_{i}-\beta_{0}-\beta_{1}x_{i})(x_{i}) = 0 \\
@@ -75,8 +75,14 @@ $$\begin{equation}
 \beta_{1}=cov(x,y)/var(x)
 \end{equation}$$
 
-And here is the normal equation for multiple features:
+And here is the much cleaner solution in matrix notation for the general case:
 
 $$\begin{equation}
 \theta = (X^{T} \cdot{X})^{-1} \cdot{X^{T}} \cdot{y}
 \end{equation}$$
+
+### Gradient Descent
+
+Gradient Descent is an iterative approach to finding the optimal set of model parameters for model training. In fact, this method is capable of finding solutions to a range of problems other than linear regression. It starts with a random initialization of parameter values and iteratively checks the performance difference of model errors versus the last trial.
+
+When the performance difference approximates zero (or a tolerable level of irreducible error), model training has converged to the best set of parameter values. The rate in which the parameters are adjusted for each trail is called the learning rate. If the learning rate is too small then convergence can take an unnecessarily long amount of time. But if it's too large then it is possible to miss the best set of parameters values, so choose wisely!

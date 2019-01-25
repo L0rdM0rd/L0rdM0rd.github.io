@@ -81,8 +81,32 @@ $$\begin{equation}
 \theta = (X^{T} \cdot{X})^{-1} \cdot{X^{T}} \cdot{y}
 \end{equation}$$
 
+### Implementation
+
+Now that we have a conceptual understanding of the linear regression algorithm, let's build it! First, we'll generate some data and plot it. We should expect to see a linear relationship between changes in $$x_{1}$$ and $$y$$.
+
+![png](/images/convergence/linear-data.png?raw=True)
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+X = 3*np.random.rand(100,1)
+y = 5 + 4*X + np.random.randn(100,1)
+
+plt.plot(X,y,"c.")
+plt.xlabel("$x_1$",fontsize=15)
+plt.ylabel("$y$",fontsize=15)
+plt.axis([0,3,0,20])
+plt.show()
+```
+
+As expected, the data reflects a positive association of $$y$$ with $$x_{1}$$. $$x_{1}$$ is an array of 100 data points drawn from the uniform distribution ([0,1)) and $$y$$ is also an array of 100 data points dependent on $$x_{1}$$ plus some noise. The noise is randomly generated from the normal distribution, consistent with model assumptions for errors (mean = 0 and unit variance).
+
+Now let's optimize for our parameters. We'll account for our model's intercept by appending a column of one's to $$x_{1}$$ data. In this way, the intercept is implemented the same as any feature but with an input value of one for every instance.
+
 ### Gradient Descent
 
-Gradient Descent is an iterative approach to finding the optimal set of model parameters for model training. In fact, this method is capable of finding solutions to a range of problems other than linear regression. It starts with a random initialization of parameter values and iteratively checks the performance difference of model errors versus the last trial.
+Gradient Descent is an iterative approach to finding the optimal set of model parameters for model training. In fact, this method is capable of finding solutions to a range of problems other than linear regression. It starts with a random initialization of parameter values and iteratively computes the change in model errors versus the most recent trial. Model training has converged to the best set of parameter values when the performance difference approximates zero (or a tolerable level of error).
 
-When the performance difference approximates zero (or a tolerable level of irreducible error), model training has converged to the best set of parameter values. The rate in which the parameters are adjusted for each trail is called the learning rate. If the learning rate is too small then convergence can take an unnecessarily long amount of time. But if it's too large then it is possible to miss the best set of parameters values, so choose wisely!
+The rate in which the parameters are adjusted for each trail is called the learning rate. If the learning rate is too small then training can take an unnecessarily long amount of time. But if it's too large then it's possible to miss the best set of parameters values, so it's definitely worth the time to tune.

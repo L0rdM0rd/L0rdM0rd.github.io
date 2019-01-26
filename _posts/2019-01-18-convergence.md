@@ -21,7 +21,7 @@ $$\begin{equation}
 Y = f(X) + \epsilon
 \end{equation}$$
 
-In this equation, $$f$$ is our model and $$\epsilon$$ represents the variation of $$y$$ not captured by our model. Linear models associate a linear shape for $$f$$. Here is the general form of a linear model:
+In this equation, $$f$$ is our model and $$\epsilon$$ represents the variation of $$y$$ not captured by our model. Linear models are named as such because they associate a linear shape for $$f$$. Here is the general form of a linear model:
 
 $$\begin{equation}
 f(X) = \beta_{0} + \beta_{1}X_{1} + \beta_{2}X_{2} +...+\beta_{n}X_{n}
@@ -91,19 +91,59 @@ Now that we have a conceptual understanding of the linear regression algorithm, 
 import numpy as np
 import matplotlib.pyplot as plt
 
-X = 3*np.random.rand(100,1)
-y = 5 + 4*X + np.random.randn(100,1)
+np.random.seed(11)
 
-plt.plot(X,y,"c.")
+X1 = 3*np.random.rand(100,1)
+y = 5 + 4*X1 + np.random.randn(100,1)
+
+plt.plot(X1,y,"c.")
 plt.xlabel("$x_1$",fontsize=15)
 plt.ylabel("$y$",fontsize=15)
 plt.axis([0,3,0,20])
 plt.show()
 ```
 
-As expected, the data reflects a positive association of $$y$$ with $$x_{1}$$. $$x_{1}$$ is an array of 100 data points drawn from the uniform distribution ([0,1)) and $$y$$ is also an array of 100 data points dependent on $$x_{1}$$ plus some noise. The noise is randomly generated from the normal distribution, consistent with model assumptions for errors (mean = 0 and unit variance).
+As expected, the data reflects a positive association of $$x_{1}$$ with $$y$$. $$x_{1}$$ is an array of 100 data points drawn from the uniform distribution ([0,1)) and $$y$$ is also an array of 100 data points dependent on $$x_{1}$$ plus some noise. The noise is randomly generated from the normal distribution, consistent with model assumptions for errors (mean = 0 and unit variance).
 
-Now let's optimize for our parameters. We'll account for our model's intercept by appending a column of one's to $$x_{1}$$ data. In this way, the intercept is implemented the same as any feature but with an input value of one for every instance.
+Now let's optimize for our parameters. We'll account for our model's intercept by appending a column of one's to the $$x_{1}$$ data. In this way, the intercept is implemented the same as any feature but with an input value of one for every instance. Next, we can implement the direct solution with one line of code and numpy! Here are the results:
+
+```python
+X0_X1 = np.c_[np.ones((100,1)),X1]
+theta = np.linalg.inv(X0_X1.T.dot(X0_X1)).dot(X0_X1.T).dot(y)
+```
+
+![png](/images/convergence/theta.png?raw=True)
+
+We can visualize our linear model as a function of $$x_{1}$$ by connecting the prediction results from its fringe values (constant slope). In this case, our data ranges from [0,3] so we'll compute predictions for these inputs and plot the fitness of our model.
+
+```python
+X_fringe = np.array([[0],[3]])
+X0_X1_fringe = np.c_[np.ones((2,1)),X_fringe]
+y_fringe = X0_X1_fringe.dot(theta)
+
+plt.plot(X_fringe,y_fringe,"b-")
+plt.plot(X1,y,"c.")
+plt.xlabel("$x_1$",fontsize=15)
+plt.ylabel("$y$",fontsize=15)
+plt.axis([0,3,0,20])
+plt.show()
+```
+
+![png](/images/convergence/fitness.png?raw=True)
+
+Looking good! Finally, let's check our implementation vs a packaged version from Scikit-Learn. Our model parameters should be the same as theirs if we didn't make any mistakes.
+
+```python
+from sklearn.linear_model import LinearRegression
+
+lr = LinearRegression()
+lr.fit(X1,y)
+
+print("sklearn B0: ", lr.intercept_)
+print("sklearn B1: ", lr.coef_[0])
+```
+
+![png](/images/convergence/sklearn.png?raw=True)
 
 ### Gradient Descent
 

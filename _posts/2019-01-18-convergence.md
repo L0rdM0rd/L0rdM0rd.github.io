@@ -1,7 +1,7 @@
 ---
 title: "Convergence of Linear Models"
 date: 2019-01-18
-tags: [optimization-gradient descent-normal equation-maximum likelihood estimation-regression-classification]
+tags: [optimization-gradient descent-normal equation-regression]
 header:
   image: "/images/convergence/header.png"
   caption: "Photo Credit: libretexts.org"
@@ -192,3 +192,12 @@ We randomly initialize $$\theta$$ from the normal distribution (mean = 0) to ens
 Let's have a look at the first ten adjustments of $$\theta$$ using Batch Gradient Descent. The algorithm appears to converge quickly for this dataset. The dashed red line is the random initialization of parameters.
 
 ![png](/images/convergence/batch-adj.png?raw=True)
+
+### References
+
+1. *Hands-On Machine Learning with Scikit-Learn and Tensorflow* by Aurelien Geron (O'Reilly)
+2. *An Introduction to Statistical Learning* by Gareth James, Deniela Witten, Trevor Hastie, and Robert Tibshiran (Springer)
+3. *An Intuitive Introduction to Gradient Descent* by Thalles Silva
+https://towardsdatascience.com/machine-learning-101-an-intuitive-introduction-to-gradient-descent-366b77b52645
+4. Derivation proof
+https://math.stackexchange.com/questions/716826/derivation-of-simple-linear-regression-parameters

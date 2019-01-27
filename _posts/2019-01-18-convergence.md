@@ -131,7 +131,7 @@ plt.axis([0,3,0,20])
 plt.show()
 ```
 
-Looking good! Finally, let's check our implementation vs a packaged version from Scikit-Learn. Our model parameters should be the same as theirs if we didn't make any mistakes.
+Looking good! Finally, let's check our implementation vs a packaged version from Scikit-Learn. Our model parameters should be the same as theirs if we didn't make any mistakes (direct solution).
 
 ```python
 from sklearn.linear_model import LinearRegression
@@ -149,18 +149,46 @@ print("sklearn B1: ", lr.coef_[0])
 
 Consider that the Normal Equation requires computation and inversion of the matrix $$(X^{'}X)^{-1}$$, which can become expensive and slow as model dimensionality increases. Gradient Descent is another approach to finding the optimal set of model parameters and scales much better with the number of features. It starts with a random initialization of parameter values, and given these values, computes a number of iterative adjustments based on the local optima and the learning rate.
 
-In other words, since our performance measure (SE) is a function of our model parameters ($$\theta$$), gradient descent starts with a random set of parameters and incrementally improves the recent set with each iteration.  Model training converges to the best set of parameter values when the performance difference approximates zero (or a tolerable level of error).
+In other words, since our performance measure (MSE) is a function of our model parameters ($$\theta$$), gradient descent starts with a random set of parameters and incrementally improves the recent set with each iteration.  Model training converges to the best set of parameter values when the local optima approximate the global optima with a tolerable level of error.
 
 The learning rate is the pace of adjustment for the parameters based on the local optima and it's actually an important part of the algorithm. If it's set too small then training can take an unnecessarily long amount of time, but if it's too large then it's possible to miss the set of parameters which minimize model errors. In practice, a learning rate of 0.1 is used as a default.
 
- Partitioning our performance function with respect to a given parameter ($$\theta_{j}) is equal to the following equation:
+ Partitioning our performance function with respect to a given parameter ($$\theta_{j}$$) is equal to the following equation:
 
 $$\begin{equation}
-\frac{\partial}{\partial\theta_{j}}SE(\theta) = \frac{2}{m}\sigma_{i=1}^{m}(\theta^{T} \cdot{x^{(i)}}-y^{(i)})x_{j}^{(i)}
+\frac{\partial}{\partial\theta_{j}}SE(\theta) = \frac{2}{n}\sum_{i=1}^{n}(\theta^{T} \cdot{x^{(i)}}-y^{(i)})x_{j}^{(i)}
 \end{equation}$$
 
 Given the current values of $$\theta$$, Gradient Descent computes the partial derivatives for each feature and adjusts $$\theta$$ based on these local optima and the learning rate. The cumulation of these partial derivatives can be represented as a vector and computed in the following way:
 
 $$\begin{equation}
-\delta_{\theta}SE(\theta) = \frac{2}{n}X^{T} \cdot{(X \cdot{\theta -y})}
+\nabla_{\theta}SE(\theta) = \frac{2}{n}X^{T} \cdot{(X \cdot{\theta -y})}
 \end{equation}$$
+
+### Implementation
+
+Notice that the function for the gradient vector uses the entire dataset for training. This is called Batch Gradient Descent because it uses all of the training data during each iteration of computing the gradients. As a result, training with Batch scales poorly with larger datasets.
+
+The implementation is fairly straightforward.
+
+```python
+adj_rate = 0.1
+iterations = 1000
+n = 100
+theta = np.random.randn(2,1)
+
+for iteration in range(iterations):
+    gradients = 2/n * X0_X1.T.dot(X0_X1.dot(theta) - y)
+    theta = theta - adj_rate*gradients
+
+print("model intercept: ",theta[0])
+print("x1 parameter:    ",theta[1])
+```
+
+![png](/images/convergence/batch.png?raw=True)
+
+We randomly initialize $$\theta$$ from the normal distribution (mean = 0) to ensure no directional bias for the gradients, on average. Then we compute the gradient vector for each iteration and adjust our $$\theta$$ according to the learning rate. As expected, the results are identical for Batch Gradient Descent.
+
+Let's have a look at the first ten adjustments of $$\theta$$ using Batch Gradient Descent. The algorithm appears to converge quickly for this dataset. The dashed red line is the random initialization of parameters.
+
+![png](/images/convergence/batch-adj.png?raw=True)

@@ -37,7 +37,7 @@ For each instance, we take the squared difference between our prediction and the
 
 ### The Closed Form Solution
 
-In this section, I will go through the steps to find model parameters for a single feature. Application of multiple features is conceptually the same process but is done using matrix notation for convenience. Either case provides a direct solution of optimal parameters instead of an iterated approach (more on this later). Lets get started!
+In this section, I will go through the steps to find model parameters for a single feature. Applications with multiple features are conceptually the same process but use matrix notation for convenience. In either case, the goal is a direct solution of optimal parameters instead of an iterated approach (more on this later). Lets get started!
 
 Our goal is to minimize our performance measure (RMSE) with respect to the model parameters ($$\beta_{0}$$ and $$\beta_{1}$$). We can drop the square root and the (1/m) constant since they have no effect on the end result. This simplifies our function to the squared-sum of model errors (SE):
 
@@ -103,7 +103,7 @@ plt.axis([0,3,0,20])
 plt.show()
 ```
 
-As expected, the data reflects a positive association of $$x_{1}$$ with $$y$$. $$x_{1}$$ is an array of 100 data points drawn from the uniform distribution ([0,1)) and $$y$$ is also an array of 100 data points dependent on $$x_{1}$$ plus some noise. The noise is randomly generated from the normal distribution, consistent with model assumptions for errors (mean = 0 and unit variance).
+As expected, the data reflects a positive association of $$x_{1}$$ with $$y$$. $$x_{1}$$ is an array of 100 data points drawn from the uniform distribution ([0,1)) and $$y$$ is also an array of 100 data points dependent on $$x_{1}$$ plus some noise. The noise is randomly generated from the normal distribution, consistent with model assumptions for errors (mean = 0).
 
 Now let's optimize for our parameters. We'll account for our model's intercept by appending a column of one's to the $$x_{1}$$ data. In this way, the intercept is implemented the same as any feature but with an input value of one for every instance. Next, we can implement the direct solution with one line of code and numpy! Here are the results:
 
@@ -115,6 +115,8 @@ theta = np.linalg.inv(X0_X1.T.dot(X0_X1)).dot(X0_X1.T).dot(y)
 ![png](/images/convergence/theta.png?raw=True)
 
 We can visualize our linear model as a function of $$x_{1}$$ by connecting the prediction results from its fringe values (constant slope). In this case, our data ranges from [0,3] so we'll compute predictions for these inputs and plot the fitness of our model.
+
+![png](/images/convergence/fitness.png?raw=True)
 
 ```python
 X_fringe = np.array([[0],[3]])
@@ -128,8 +130,6 @@ plt.ylabel("$y$",fontsize=15)
 plt.axis([0,3,0,20])
 plt.show()
 ```
-
-![png](/images/convergence/fitness.png?raw=True)
 
 Looking good! Finally, let's check our implementation vs a packaged version from Scikit-Learn. Our model parameters should be the same as theirs if we didn't make any mistakes.
 
@@ -147,6 +147,20 @@ print("sklearn B1: ", lr.coef_[0])
 
 ### Gradient Descent
 
-Gradient Descent is an iterative approach to finding the optimal set of model parameters for model training. In fact, this method is capable of finding solutions to a range of problems other than linear regression. It starts with a random initialization of parameter values and iteratively computes the change in model errors versus the most recent trial. Model training has converged to the best set of parameter values when the performance difference approximates zero (or a tolerable level of error).
+Consider that the Normal Equation requires computation and inversion of the matrix $$(X^{'}X)^{-1}$$, which can become expensive and slow as model dimensionality increases. Gradient Descent is another approach to finding the optimal set of model parameters and scales much better with the number of features. It starts with a random initialization of parameter values, and given these values, computes a number of iterative adjustments based on the local optima and the learning rate.
 
-The rate in which the parameters are adjusted for each trail is called the learning rate. If the learning rate is too small then training can take an unnecessarily long amount of time. But if it's too large then it's possible to miss the best set of parameters values, so it's definitely worth the time to tune.
+In other words, since our performance measure (SE) is a function of our model parameters ($$\theta$$), gradient descent starts with a random set of parameters and incrementally improves the recent set with each iteration.  Model training converges to the best set of parameter values when the performance difference approximates zero (or a tolerable level of error).
+
+The learning rate is the pace of adjustment for the parameters based on the local optima and it's actually an important part of the algorithm. If it's set too small then training can take an unnecessarily long amount of time, but if it's too large then it's possible to miss the set of parameters which minimize model errors. In practice, a learning rate of 0.1 is used as a default.
+
+ Partitioning our performance function with respect to a given parameter ($$\theta_{j}) is equal to the following equation:
+
+$$\begin{equation}
+\frac{\partial}{\partial\theta_{j}}SE(\theta) = \frac{2}{m}\sigma_{i=1}^{m}(\theta^{T} \cdot{x^{(i)}}-y^{(i)})x_{j}^{(i)}
+\end{equation}$$
+
+Given the current values of $$\theta$$, Gradient Descent computes the partial derivatives for each feature and adjusts $$\theta$$ based on these local optima and the learning rate. The cumulation of these partial derivatives can be represented as a vector and computed in the following way:
+
+$$\begin{equation}
+\delta_{\theta}SE(\theta) = \frac{2}{n}X^{T} \cdot{(X \cdot{\theta -y})}
+\end{equation}$$

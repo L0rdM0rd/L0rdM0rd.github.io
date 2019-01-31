@@ -45,7 +45,7 @@ $$\begin{equation}
 SE = \sum_{i=1}^{n}(y_{i}-\beta_{0}-\beta_{1}x_{i})^{2}
 \end{equation}$$
 
-First, we'll take the partial derivative of SE for $$\beta_{0}$$.
+We can obtain a direct solution through partitioning our cost function with respect to each model parameter. First, we'll take the partial derivative of SE for $$\beta_{0}$$.
 
 $$\begin{equation}
 \beta_{0}^{'} = -2\sum_{i=1}^{n}(y_{i}-\beta_{0}-\beta_{1}x_{i}) = 0 \\

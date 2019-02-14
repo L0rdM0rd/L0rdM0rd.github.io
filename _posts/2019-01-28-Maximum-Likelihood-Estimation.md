@@ -23,7 +23,7 @@ $$\begin{equation}
 L(\theta;x^{n}) = P(x^{n};\theta)
 \end{equation}$$
 
-L($$\theta$$|O) is known as the likelihood function. It estimates a function of $$\theta$$ which maximizes the chance of observing the data given the underlying distribution. It also has some nice statistical properties which allow for easier computation. Assuming the data is a random sample from some probability distribution, we can represent the joint probability distribution as the product of univariate distributions (which are all the same!).
+L is known as the likelihood function. It estimates a function of $$\theta$$ which maximizes the chance of observing the data given the underlying distribution. It also has some nice statistical properties which allow for easier computation. Assuming the data is a random sample from some probability distribution, we can represent the joint probability distribution as the product of univariate distributions (which are all the same!).
 
 $$\begin{equation}
 L(\theta;x^{n}) = \prod_{i=1}^{n}p(x_{i};\theta)

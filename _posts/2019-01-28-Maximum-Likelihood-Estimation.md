@@ -39,7 +39,7 @@ From here, we can use good ol' calculus to partition l($$\theta$$;$$x_{i}$$) for
 
 ### Logistic Regression - Motivation
 
-Regression models typically estimate the response of continuous variables from a set of fixed variables for prediction and/or inference. Said another way, prediction results are formulated as the conditional expectation of a continuous variable, where we can measure the average value of the input-output relationship ($$E(Y|X) = f(X,\beta)$$). But what if our response is categorical and not continuous? It turns out that linear models can also be used in this instance as well.
+Regression models typically estimate the response of continuous variables from a set of fixed variables for prediction and/or inference. Said another way, prediction results are formulated as the conditional expectation of a continuous variable, where we can measure the average value of the input-output relationship. But what if our response is categorical and not continuous? It turns out that linear models can also be used in this instance as well.
 
 Suppose our task is to project the default status of some student loans. It would seem reasonable to assume some randomness in the result of this binary outcome due to the difficulty of projecting 4+ years into a student's future (among other considerations!). As a result, we will need an associated probability for our projections to account for this noise. Conveniently, for binary outcomes, Pr(Y=1) = E[y] (ratio of 1's for the response) and Pr(Y=0) = 1-Pr(Y=1).
 

@@ -39,7 +39,7 @@ From here, we can use good ol' calculus to partition l($$\theta$$;$$x_{i}$$) for
 
 ### Logistic Regression - Motivation
 
-Regression models typically estimate the response of continuous variables from a set of fixed variables for prediction and/or inference. Said another way, prediction results are formulated as the conditional expectation of a continuous variable, where we can measure the average value of the input-output relationship ($$E(Y|X) = f(X,$$\beta$$)$$). But what if our response is categorical and not continuous? It turns out that linear models can also be used in this instance as well.
+Regression models typically estimate the response of continuous variables from a set of fixed variables for prediction and/or inference. Said another way, prediction results are formulated as the conditional expectation of a continuous variable, where we can measure the average value of the input-output relationship ($$E(Y|X) = f(X,\beta)$$). But what if our response is categorical and not continuous? It turns out that linear models can also be used in this instance as well.
 
 Suppose our task is to project the default status of some student loans. It would seem reasonable to assume some randomness in the result of this binary outcome due to the difficulty of projecting 4+ years into a student's future (among other considerations!). As a result, we will need an associated probability for our projections to account for this noise. Conveniently, for binary outcomes, Pr(Y=1) = E[y] (ratio of 1's for the response) and Pr(Y=0) = 1-Pr(Y=1).
 
@@ -99,4 +99,73 @@ $$\begin{equation}
 = \sum_{i=1}^{n}(y_{i}-p(x_{i}))x_{ij}
 \end{equation}$$
 
-We will use this function to iteratively update and evaluate our feature set, where performance is the difference between the label and estimated probability given the current set of features. Now let's generate some data and test our model!
+We will use this function to iteratively update and evaluate our feature set, where performance is the difference between the label and estimated probability given the current set of parameters.
+
+### Model implementation
+
+Now, let's generate some data and train a model!
+
+```python
+np.random.seed(88)
+m1 = [0,0]
+m2 = [2,5]
+n = 3000
+
+x1 = np.random.normal(m1,size=[n,2])
+x2 = np.random.normal(m2,size=[n,2])
+
+features = np.vstack((x1,x2)).astype(np.float32)
+labels = np.hstack((np.zeros(n),np.ones(n)))
+```
+
+Here, we simulate some data and ensure it's linearly separable from different sample means. Then we combine the data to form our feature set and attach the labels. A plot of the data should clearly distinguish between the two classes. Let's have a look!
+
+```python
+plt.style.use('ggplot')
+plt.figure(figsize=(10,8))
+plt.scatter(features[:,0],features[:,1],c=labels)
+plt.show()
+```
+![png](/images/mle/sim-data.png?raw=True)
+
+As you can see, we can easily separate this data with a linear decision boundary. Right on! Now that we have our data, let's build the model. First, we'll define the logit function, append the model intercept to our feature set, and initialize random values for the model parameters.
+
+```python
+# define logit function
+def logit(output):
+    return 1/(1+np.exp(-output))
+
+# account for model intercept
+x0_features = np.c_[np.ones((len(features),1)),features]
+
+# randomly initialize parameters
+theta = np.random.randn(3,1)
+```
+
+We're now ready to build the model. We'll also need an adjustment rate for the gradient updates and the number of iterations for training. Ideally, training would continue until model error is sufficiently low, but 100,000 iterations will get us close enough. For each iteration, we'll compute the output from the linear model, transform it to a probability, and compute the gradients from the differentiated log-likelihood function. Training should produce a model which correctly classifies both features with high accuracy.
+
+```python
+# Logistic Regression from scratch
+adj_rate = .01
+iterations = 100000
+
+for iteration in range(iterations):
+    #transformation
+    linear_output = np.dot(x0_features,theta)
+    probs = logit(linear_output)
+
+    #update
+    performance = labels.reshape(6000,1) - probs
+    ll = np.dot(x0_features.T,performance)
+    theta = theta + adj_rate*ll
+```
+
+Alright, so we have a linear model which uses a transformation function and Maximum Likelihood Estimation for classification. Let's compare our model parameters for Logistic Regression with Scikit-learn's. The hyperparameter (C) accounts for regularization which we didn't account for in our model, but could be a topic for a future post!
+
+![png](/images/mle/lr-params.png?raw=True)
+
+Our model's parameters are, in fact, very close to the out-of-the-box version from sklearn. Very cool! To consider performance, let's round the probabilities generated from our model and plot the conditional result of comparison to the labels. So, if the probability rounds to a one and the corresponding label is also a one then the model was correct in its prediction. Correct predictions are the yellow points in the following plot:
+
+ ![png](/images/mle/results.png?raw=True)
+
+Our model performs very well with over 99% accuracy!
